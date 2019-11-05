@@ -2,7 +2,7 @@ import React from "react";
 import styled from "@emotion/styled/macro";
 import logo from "./Theorem logotype.svg";
 
-const FooterContainer = styled.div`
+const FooterContainer = styled.footer`
   flex-shrink: 0;
   width: 100%;
   height: 54px;
