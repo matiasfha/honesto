@@ -16,15 +16,18 @@
     "react-stepzilla": "6.0.2"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "7.6.0",
     "babel-plugin-macros": "2.6.1",
+    "customize-cra": "0.8.0",
     "flow-typed": "2.6.2",
+    "react-app-rewired": "2.1.4",
     "react-scripts": "3.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject",
     "flow": "flow"
   },
   "eslintConfig": {
