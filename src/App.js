@@ -6,10 +6,12 @@ import styled from "@emotion/styled/macro";
 import { Global, css } from "@emotion/core";
 import emotionNormalize from "emotion-normalize";
 import Footer from "components/Footer";
+import StateProvider from "contexts/State";
 
 import Login from "screens/Login";
 const Home = React.lazy(() => import("screens/Home"));
 const Questions = React.lazy(() => import("screens/Questions"));
+const NoMatch = React.lazy(() => import("screens/NoMatch"));
 
 const theme = {
   colors: {
@@ -46,22 +48,29 @@ function App() {
             height: 100%;
             position: relative;
             min-height: 100vh;
+            font-family: "Average Sans", sans-serif;
           }
         `}
       />
       <ThemeProvider theme={theme}>
-        <MainContainer>
-          <React.Suspense fallback={<Container />}>
-            <Router>
-              <Switch>
-                <Route exact path="/" component={Login} />
-                <Route path="/home" render={() => <Home />} />
-                <Route path="/questions" render={() => <Questions />} />
-              </Switch>
-            </Router>
-          </React.Suspense>
-          <Footer />
-        </MainContainer>
+        <StateProvider>
+          <MainContainer>
+            <React.Suspense fallback={<Container />}>
+              <Router>
+                <Switch>
+                  <Route exact path="/" component={Login} />
+                  <Route path="/home" render={() => <Home />} />
+                  <Route
+                    path="/questions/:userId"
+                    render={() => <Questions />}
+                  />
+                  <Route path="*" render={() => <NoMatch />} />
+                </Switch>
+              </Router>
+            </React.Suspense>
+            <Footer />
+          </MainContainer>
+        </StateProvider>
       </ThemeProvider>
     </>
   );
