@@ -52,6 +52,9 @@ const FeedbackReport = ({ type }: PropsT) => {
   const [selectedFeedback, setSelectedFeedback] = React.useState(null);
   let feedback = type === "my" ? myFeedback : teamFeedback;
   React.useEffect(() => {
+    setSelectedFeedback(null);
+  }, [type]);
+  React.useEffect(() => {
     if (type === "my") {
       const getData = async () => await fetchMyFeedback();
       if (myFeedback == null) {
