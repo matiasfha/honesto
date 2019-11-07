@@ -14,7 +14,7 @@ const DropdownContainer = styled.div`
   border: 1px solid ${props => props.theme.colors.blackPearl};
   box-sizing: border-box;
   border-radius: 3px;
-  height: 50px;
+  height: 3rem;
   width: 342px;
   display: flex;
   flex-direction: row;

@@ -17,7 +17,7 @@ const BaseButton: React.ComponentType<PropsT> = styled.button`
     switch (props.type) {
       case "clear":
         return `
-          border: 1px solid ${props.theme.colors.blackPearl}
+          border: 1px solid ${props.theme.colors.blackPearl};
           color: ${props.theme.colors.black};
         `;
       default:
@@ -31,6 +31,11 @@ const BaseButton: React.ComponentType<PropsT> = styled.button`
   font-size: 16px;
   line-height: 19px;
   text-align: center;
+  &:disabled {
+    pointer-events: none;
+    background: #acb1b6;
+    color: ${props => props.theme.colors.white};
+  }
 `;
 
 const Button = (props: PropsT & { to?: string }) => {
