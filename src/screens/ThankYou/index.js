@@ -24,11 +24,9 @@ const SubTitle = styled.p`
  * This page should not be loaded if the wizard was not complete
  */
 const ThankYou = () => {
-  const {
-    sharedFeedback,
-    fetchSharedFeedback,
-    updateSharedFeedback
-  } = React.useContext(StateContext);
+  const { sharedFeedback, updateSharedFeedback } = React.useContext(
+    StateContext
+  );
   const match = useRouteMatch();
   const history = useHistory();
   const { userId } = match.params;
@@ -39,16 +37,16 @@ const ThankYou = () => {
       history.push(`/questions/${userId}`);
     }
   }, [answers.length, history, userId]);
-  const isSubmitted = () =>
-    sharedFeedback.find(item => item.user.id === userId).submitted;
   React.useEffect(() => {
+    const isSubmitted = () =>
+      sharedFeedback.find(item => item.user.id === userId).submitted;
     const getData = async () => {
       await updateSharedFeedback(userId, answers);
     };
     if (!isSubmitted()) {
       getData();
     }
-  }, [updateSharedFeedback, userId, answers, sharedFeedback, isSubmitted]);
+  }, [updateSharedFeedback, userId, answers, sharedFeedback]);
   return (
     <>
       <PageHeader>

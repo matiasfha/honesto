@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { useRouteMatch, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "@emotion/styled/macro";
 
 const HeaderContainer = styled.nav`

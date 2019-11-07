@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "@emotion/styled/macro";
 import Panel from "components/Panel";
-import { PageContainer, PageHeader } from "components/PageLayout";
 import { getQuestions } from "api/questions";
 
 const Row = styled.div`
