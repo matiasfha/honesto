@@ -1,211 +1,24 @@
 // @flow
 import React from "react";
+import { Switch, Route, Link } from "react-router-dom";
 import styled from "@emotion/styled/macro";
-import StepZilla from "react-stepzilla";
-import Rating from "react-rating";
+import { PageContainer, PageTitle, PageHeader } from "components/PageLayout";
 import NavHeader from "components/NavHeader";
-import PageLayout, {
-  PageTitle,
-  PageContainer,
-  PageHeader
-} from "components/PageLayout";
-import DefaultPanel from "components/Panel";
-import UsersItem from "components/UsersList";
+import Wizard from "components/Wizard";
+import WizardProvider from "contexts/Wizard";
+import Avatar from "components/Avatar";
 import { getQuestions } from "api/questions";
+import { getUser } from "api/users";
 
-import { getUsers } from "api/users";
+const ThankYou = React.lazy(() => import("screens/ThankYou"));
 
-const Panel = styled(DefaultPanel)`
-  width: 100%;
-  min-width: 740px;
-  min-height: 444px;
-  padding: 20px;
+const SubTitle = styled.p`
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #acb1b6;
 `;
-
-const RadioOption = styled.div`
-  background: ${props => props.theme.colors.alabastro};
-  border-radius: 3px;
-  padding: 15px 20px;
-  width: 100%;
-  margin-bottom: 10px;
-  cursor: pointer;
-  font-size: 16px;
-  line-height: 19px;
-  ${props => {
-    if (props.selected) {
-      return `
-        background: #59636E;
-        color: white;
-      `;
-    }
-    return `color: ${props.theme.colors.blackPearl}`;
-  }}
-  &:hover {
-    background: #59636e;
-    color: white;
-  }
-  [type="radio"]:checked,
-  [type="radio"]:not(:checked) {
-    position: absolute;
-    left: -9999px;
-  }
-  label {
-    cursor: pointer;
-  }
-`;
-
-type OptionPropsT = {
-  title: string,
-  content: string,
-  id: string
-};
-
-type RadioQuestionT = {
-  id: string,
-  title: string,
-  type: "radio",
-  options: Array<OptionPropsT>
-};
-
-const RadioStep = ({ id, title, type, options }: RadioQuestionT) => {
-  const [selected, setSelected] = React.useState(null);
-  return (
-    <>
-      <PageHeader>
-        <div>
-          <PageTitle>{title}</PageTitle>
-          <p>share your feedback for christopher Johnson</p>
-        </div>
-        <div>
-          <img src="https://randomuser.me/api/portraits/thumb/men/63.jpg" />
-        </div>
-      </PageHeader>
-      <Panel>
-        {options.map(option => (
-          <RadioOption key={option.id} selected={selected === option.id}>
-            <input type="radio" name={option.title} />
-            <label
-              onClick={() => {
-                setSelected(option.id);
-              }}
-            >
-              <strong>{option.title}</strong>
-              <p>{option.content}</p>
-            </label>
-          </RadioOption>
-        ))}
-      </Panel>
-    </>
-  );
-};
-
-const EmptySquare = styled.div`
-  background: #f2f3f4;
-  border: 2px solid #fff;
-  box-sizing: border-box;
-  width: 74px;
-  height: 74px;
-`;
-
-const FullSquare = styled(EmptySquare)`
-  background: ${props => props.theme.colors.purple};
-`;
-
-const ScaleStep = question => {
-  const [rating, setRating] = React.useState(0);
-  return (
-    <>
-      <PageHeader>
-        <div>
-          <PageTitle>{question.title}</PageTitle>
-          <p>share your feedback for christopher Johnson</p>
-        </div>
-        <div>
-          <img src="https://randomuser.me/api/portraits/thumb/men/63.jpg" />
-        </div>
-      </PageHeader>
-      <Panel>
-        <p>{question.description}</p>
-        <div>
-          <Rating
-            start={1}
-            stop={10}
-            placeholderRating={1}
-            emptySymbol={<EmptySquare />}
-            fullSymbol={<FullSquare />}
-            placeholderSymbol={<FullSquare />}
-            onClick={value => setRating(value)}
-          />
-          <span>{rating}/10</span>
-        </div>
-      </Panel>
-    </>
-  );
-};
-
-const TextArea = styled.textarea`
-  background: #ffffff;
-  border: 1px solid #d9dcde;
-  box-sizing: border-box;
-  border-radius: 3px;
-  width: 100%;
-  height: 231px;
-  font-size: 1rem;
-  line-height: 19px;
-`;
-
-const TextStep = question => {
-  return (
-    <>
-      <PageHeader>
-        <div>
-          <PageTitle>{question.title}</PageTitle>
-          <p>share your feedback for christopher Johnson</p>
-        </div>
-        <div>
-          <img src="https://randomuser.me/api/portraits/thumb/men/63.jpg" />
-        </div>
-      </PageHeader>
-      <Panel>
-        <TextArea placeholder="Say something..." />
-      </Panel>
-    </>
-  );
-};
-
-const ThankYou = () => {
-  const users = getUsers();
-  return (
-    <PageLayout title="Thank you for sharing your feedback">
-      <Panel>
-        {users.map(user => {
-          return <UsersItem key={user.id} user={user} />;
-        })}
-      </Panel>
-    </PageLayout>
-  );
-};
-const generateSteps = () => {
-  const questions = getQuestions().map(question => {
-    let component;
-    switch (question.type) {
-      case "radio":
-        component = <RadioStep {...question} />;
-        break;
-      case "scale":
-        component = <ScaleStep {...question} />;
-        break;
-      default:
-        component = <TextStep {...question} />;
-        break;
-    }
-    return {
-      name: question.title,
-      component
-    };
-  });
-  return [...questions, { name: "Thank You", component: <ThankYou />, id: 4 }];
-};
 
 const Container = styled(PageContainer)`
   flex: 1;
@@ -213,44 +26,67 @@ const Container = styled(PageContainer)`
   width: 740px !important;
   min-width: 740px;
   min-height: 370px;
-  .multi-step {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
-  .footer-buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 3rem;
-    width: 100%;
-  }
-  .btn {
-    outline: none;
-    border-radius: 4px;
-    width: 150px;
-    min-height: 48px;
-    color: ${props => props.theme.colors.black};
-    cursor: pointer;
-    &:hover,
-    &:active {
-      background: #acb1b6;
-      color: #fff;
-    }
-  }
+  margin-top: 40px;
+`;
+
+const BackLink = styled(Link)`
+  text-decoration: none;
+  text-transform: uppercase;
+  color: ${props => props.theme.colors.black};
+  letter-spacing: 0.15em;
+  line-height: 14px;
+  font-size: 12px;
+  align-self: flex-start;
 `;
 
 const Questions = () => {
-  const [answers, setAnswers] = React.useState([]);
+  const questions = getQuestions();
   return (
-    <>
+    <WizardProvider>
       <NavHeader />
       <Container>
-        <StepZilla steps={generateSteps()} showSteps={false} />
+        <Switch>
+          <Route
+            exact
+            path="/questions/:userId/thank-you"
+            render={() => <ThankYou />}
+          />
+          <Route
+            exact
+            path="/questions/:userId"
+            render={({ match, history }) => {
+              const { userId } = match.params;
+              const user = getUser(userId);
+              const onEnd = () => {
+                history.push(`/questions/${userId}/thank-you`);
+              };
+              return (
+                <>
+                  <BackLink to="/home">&lt; Back</BackLink>
+                  <Wizard
+                    onEnd={onEnd}
+                    steps={questions}
+                    header={currentQuestion => {
+                      return (
+                        <PageHeader>
+                          <div>
+                            <PageTitle>{currentQuestion.title}</PageTitle>
+                            <SubTitle>
+                              share your feedback for {user.name}
+                            </SubTitle>
+                          </div>
+                          <Avatar src={user.picture.thumbnail} />
+                        </PageHeader>
+                      );
+                    }}
+                  />
+                </>
+              );
+            }}
+          />
+        </Switch>
       </Container>
-    </>
+    </WizardProvider>
   );
 };
 

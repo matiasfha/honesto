@@ -5,7 +5,7 @@ import styled from "@emotion/styled/macro";
 import ShareFeedback from "screens/ShareFeedback";
 import NavHeader from "components/NavHeader";
 
-const NoMatch = React.lazy(() => import("screens/NoMatch"));
+const FeedbackReport = React.lazy(() => import("screens/FeedbackReport"));
 
 const Container = styled.div`
   flex: 1;
@@ -26,14 +26,13 @@ const Home = () => {
             <Route
               exact
               path="/home/my-feedback"
-              render={() => <p>My Feedback</p>}
+              render={() => <FeedbackReport type="my" />}
             />
             <Route
               exact
-              path="/home/team-feedback"
-              render={() => <p>Team Feedback</p>}
+              path="/home/team-feedback/"
+              render={() => <FeedbackReport type="team" />}
             />
-            <Route path="*" render={() => <NoMatch />} />
           </Switch>
         </Container>
       </React.Suspense>
